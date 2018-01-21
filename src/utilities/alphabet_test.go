@@ -9,35 +9,35 @@ import (
 func TestGetLetter_0(t *testing.T) {
 	c := 'a'
 	shift := 0
-	assert.Equal(t, utilities.GetLetter(c, shift), 'a')
+	assert.Equal(t, 'a', utilities.GetLetter(c, shift))
 }
 
 func TestGetLetter_1(t *testing.T) {
 	c := 'a'
 	shift := 1
-	assert.Equal(t, utilities.GetLetter(c, shift), 'b')
+	assert.Equal(t, 'b', utilities.GetLetter(c, shift))
 }
 
 func TestGetLetter_2(t *testing.T) {
 	c := 'a'
 	shift := 2
-	assert.Equal(t, utilities.GetLetter(c, shift), 'c')
+	assert.Equal(t, 'c', utilities.GetLetter(c, shift))
 }
 
 func TestGetLetter_26(t *testing.T) {
 	c := 'a'
 	shift := 26
-	assert.Equal(t, utilities.GetLetter(c, shift), 'a')
+	assert.Equal(t, 'a', utilities.GetLetter(c, shift))
 }
 
 func TestGetLetter_m1(t *testing.T) {
 	c := 'a'
 	shift := -1
-	assert.Equal(t, utilities.GetLetter(c, shift), 'z')
+	assert.Equal(t, 'z', utilities.GetLetter(c, shift))
 }
 
 func TestGetLetter_m2(t *testing.T) {
 	c := 'a'
 	shift := -2
-	assert.Equal(t, utilities.GetLetter(c, shift), 'y')
+	assert.Equal(t, 'y', utilities.GetLetter(c, shift))
 }
