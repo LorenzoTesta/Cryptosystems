@@ -25,6 +25,7 @@ func NewEnigma(rs []*Rotor, k []rune) *enigma {
 func (m *enigma) Encode(ptext string) string{
 	result := make([]rune, len(ptext))
 	rotorsEncode(ptext, m.rotors, result)
+	rotorsEncode(string(result), rotorReverse(m.rotors), result)
 	return string(result)
 }
 
@@ -35,13 +36,13 @@ func rotorsEncode(ptext string, rs []*Rotor, result []rune) {
 		}
 		result[i] = c
 	}
-
 }
 
 
 func (m *enigma) Decode(ctext string) string{
 	result := make([]rune, len(ctext))
 	rotorsDecode(stringReverse(ctext), rotorReverse(m.rotors), result)
+	rotorsDecode(string(result), m.rotors, result)
 	return stringReverse(string(result))
 }
 
