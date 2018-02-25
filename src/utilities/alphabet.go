@@ -14,3 +14,10 @@ func GetLetter (r rune, shift int) rune {
 }
 
 
+func GetAlphabetOffset(r rune) int {
+	if r >= 'a' && r <= 'z' {
+		return int(r) - 'a'
+	} else {
+		return 0
+	}
+}
