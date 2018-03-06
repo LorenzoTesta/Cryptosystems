@@ -5,7 +5,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	algo "../../../classical/shift"
 	"../../../attack/classical/shift"
+	. "../../../utilities"
 )
+
+var FILEPATH = "../../../test_files/dummy.txt"
 
 
 // EXHAUSTIVE
@@ -14,6 +17,21 @@ func TestExhaustive(t *testing.T) {
 	p := "abcdefg"
 	c := algo.Encode(p, 7)
 	results := shift.Exhaustive(c)
+	assert.Contains(t, results, p)
+}
+
+// LETTER FREQUENCY
+
+func TestLetterFrequency(t *testing.T) {
+	//p, e := ioutil.ReadFile(FILEPATH)
+	//if e != nil {
+	//	fmt.Println(e)
+	//	return
+	//}
+	//c := algo.Encode(string(p), 7)
+	p := GeneratePlaintext(&shift.FREQTABLE)
+	//c := algo.Encode(p, 7)
+	results := shift.LetterFrequency(p)
 	assert.Contains(t, results, p)
 }
 

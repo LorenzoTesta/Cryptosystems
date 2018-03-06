@@ -4,6 +4,8 @@ import (
 	method "../../../classical/shift"
 	. "../../../utilities"
 	"sort"
+	"time"
+	"fmt"
 )
 
 
@@ -31,52 +33,81 @@ func Exhaustive(c string) [] string {
 
 func LetterFrequency(c string) [] string {
 
+	startAll := time.Now()
+
+	t := Start("- count the occurrences... ")
 	countTab := NewFrequencyTable(c) // CONTO LE OCCORRENZE
+	Finish(t)
 
+	sort.Sort(countTab)
+
+	PrintPretty(countTab)
+
+	t = Start("- calculate rating... ")
 	countTab.CalcPerc(len(c)) // CALCOLO DELLE PERCENTUALI
+	Finish(t)
 
+	PrintPretty(countTab)
+
+	t = Start("- create matching tables... ")
 	pairs := MatchesMap{}
 	for _, l := range countTab { // ASSOCIAZIONE c -> possibili valori
-		deltasTab := FREQTABLE.CalcDeltas(l.Value)
+		deltasTab := FREQTABLE.CalcDeltas(l.Rate)
 		sort.Sort(deltasTab)
-		pairs[l.Key] = deltasTab.GetSmallerThan(0.5)
+		fmt.Print(string(l.Key), " ", l.Key, l.Rate, " -> ")
+		pairs[l.Key] = deltasTab.GetSmallerThan(0.0002)
+		pairs[l.Key] = deltasTab.GetBestNmatch(1)
 	}
+	Finish(t)
 
-	tables := BuildTabs(pairs)
+	PrintPretty(pairs)
 
-	return BuildStrings(tables, c)
+	t = Start("- building association tables... ")
+	tables := BuildTabs(&pairs)
+	Finish(t)
+
+	PrintPretty(tables)
+
+	t = Start("- building strings... ")
+	results := BuildStrings(tables, c, 100)
+	Finish(t)
+
+	PrintPretty(results)
+
+	fmt.Println(" TOTAL TIME:", time.Since(startAll))
+	return results
 }
 
 
-func BuildTabs(matches MatchesMap) []ChangeTable {
-	results := []ChangeTable{}
+
+func BuildTabs(matches *MatchesMap) []*ChangeTable {
+	results := []*ChangeTable{}
 
 	// prendo un array di corrispondenze
-	for l, v := range matches {
-
+	for l, v := range *matches {
 		for _, k := range v {
 			// clono la sottoMappa di corrispondenze
 			clone := Clone(matches)
 
 			// rimuovo la lettera corrente
-			delete(clone, l)
+			delete(*clone, l)
+
 			// rimuovo la corrispondenza scelta
 			clone.clearTab(k)
+
 			// calcolo i sottoalberi
 			subTabs := BuildTabs(clone)
 
 			// aggiungo ad ogni sottoalbero la radice comune
-			appendToAll(&subTabs, l, k)
+			appendToAll(subTabs, l, k)
 		}
-
 	}
 	return results
 }
 
-
-func appendToAll(tables *[]ChangeTable, l rune, s rune) {
-	for _, v := range *tables {
-		v[l] = s
+func appendToAll(tables []*ChangeTable, l rune, s rune) {
+	for _, v := range tables {
+		(*v)[l] = s
 	}
 }
 
@@ -91,46 +122,35 @@ func (mm *MatchesMap)clearTab(l rune) {
 }
 
 
-
-
-func BuildStrings(tables []ChangeTable, ciphertext string) []string {
+func BuildStrings(tables []*ChangeTable, ciphertext string, nchar int) []string {
 	result := []string{}
 	for i, tab := range tables {
 		plaintext := []rune{}
-		for j, l := range ciphertext {
-			plaintext[j] = tab[l]
+		c := []rune(ciphertext)
+		for j:=0; j<nchar; j++ {
+			plaintext[j] = (*tab)[ c[j] ]
 		}
 		result[i] = string(plaintext)
 	}
 	return result
 }
 
+
 type Match struct {
 	Values rune
 }
+
 type MatchesMap map[rune][]rune
 
-func Clone(matches MatchesMap) MatchesMap {
+func Clone(matches *MatchesMap) *MatchesMap {
 	result := MatchesMap{}
-	for i, v := range matches {
+	for i, v := range *matches {
 		result[i] = v
 	}
-	return result
+	return &result
 }
-
 
 type ChangeTable map[rune]rune
-
-func Union(a, b []ChangeTable) []ChangeTable {
-	result :=  []ChangeTable{}
-	for _, v := range a {
-		result = append(result, v)
-	}
-	for _, v := range b {
-		result = append(result, v)
-	}
-	return result
-}
 
 func contains(s []rune, e rune) int {
 	for i, a := range s {

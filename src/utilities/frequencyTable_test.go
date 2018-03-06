@@ -6,22 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
+/*
 func TestFrequencyTable_NewFrequencyTable_0(t *testing.T) {
 	ft := NewFrequencyTable("abbccddd")
 	expected := FrequencyTable{{'a', 1}, {'b', 2}, {'c', 2}, {'d', 3}}
 	assert.Equal(t, true, ft.Equal(expected))
 }
-
-
-func TestFrequencyTable_CalcPerc_0(t *testing.T) {
-	s := "abcd"
-	ft := NewFrequencyTable(s)
-	expected := FrequencyTable{{'a', 0.25}, {'b', 0.25}, {'c', 0.25}, {'d', 0.25}}
-	ft.CalcPerc(len(s))
-	assert.Equal(t, true, ft.Equal(expected))
-}
-
+*/
 
 func TestFrequencyTable_GetSmallerThan_0(t *testing.T) {
 	ft := FrequencyTable{{'b', 0.015}, {'c', 0.028},
