@@ -6,13 +6,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-/*
+
 func TestFrequencyTable_NewFrequencyTable_0(t *testing.T) {
 	ft := NewFrequencyTable("abbccddd")
 	expected := FrequencyTable{{'a', 1}, {'b', 2}, {'c', 2}, {'d', 3}}
 	assert.Equal(t, true, ft.Equal(expected))
 }
-*/
+
+
+func TestFrequencyTable_CalcPerc_0(t *testing.T) {
+	p := "abbcccdddd"
+	ft := NewFrequencyTable(p)
+	ft.CalcPerc(len(p))
+	expected := FrequencyTable{{'a', 0.1}, {'b', 0.2}, {'c', 0.3}, {'d', 0.4}}
+	assert.Equal(t, true, ft.Equal(expected))
+}
+
 
 func TestFrequencyTable_GetSmallerThan_0(t *testing.T) {
 	ft := FrequencyTable{{'b', 0.015}, {'c', 0.028},
@@ -22,11 +31,20 @@ func TestFrequencyTable_GetSmallerThan_0(t *testing.T) {
 }
 
 
+func TestFrequencyTable_GetBestNmatch(t *testing.T) {
+	ft := FrequencyTable{{'b', 0.015}, {'c', 0.028},
+		{'d', 0.043}, {'a', 0.082}}
+	expected := []rune{'b','c'}
+	assert.Equal(t, expected, ft.GetBestNmatch(2))
+}
+
+
 func TestFrequencyTable_CalcDeltas_0(t *testing.T) {
 	ft := FrequencyTable{{'a', 0.082}, {'b', 0.015}, {'c', 0.028}, {'d', 0.043}}
 	expected :=  FrequencyTable{{'a', 0.918}, {'b', 0.985}, {'c', 0.972}, {'d', 0.957}}
 	assert.Equal(t, expected, ft.CalcDeltas(1))
 }
+
 
 func TestFrequencyTable_Equal(t *testing.T) {
 	ft := FrequencyTable{{'a', 1}, {'b', 2}, {'c', 2}, {'d', 3}}
