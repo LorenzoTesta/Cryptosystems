@@ -6,6 +6,7 @@ import (
 	algo "../../../classical/shift"
 	"../../../attack/classical/shift"
 	. "../../../utilities"
+	"fmt"
 )
 
 var FILEPATH = "../../../test_files/dummy.txt"
@@ -23,15 +24,12 @@ func TestExhaustive(t *testing.T) {
 // LETTER FREQUENCY
 
 func TestLetterFrequency(t *testing.T) {
-	//p, e := ioutil.ReadFile(FILEPATH)
-	//if e != nil {
-	//	fmt.Println(e)
-	//	return
-	//}
-	//c := algo.Encode(string(p), 7)
-	p := GeneratePlaintext(&shift.FREQTABLE)
-	//c := algo.Encode(p, 7)
-	results := shift.LetterFrequency(p)
+	ft := FrequencyTable{{'b', 0.1}, {'c', 0.2},
+		{'d', 0.3}, {'a', 0.4}}
+	p := GeneratePlaintext(&ft)
+	fmt.Println("plaintext:", p)
+	results := shift.LetterFrequency(p, &ft)
+	PrintPretty(results)
 	assert.Contains(t, results, p)
 }
 
