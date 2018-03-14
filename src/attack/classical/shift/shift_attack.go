@@ -40,11 +40,9 @@ func LetterFrequency(c string, ft *FrequencyTable) [] string {
 	Finish(t)
 
 	sort.Sort(countTab)
-	PrintPretty(countTab)
 
 	t = Start("- calculate rating... ")
 	countTab.CalcPerc(len(c))
-	PrintPretty(countTab)
 	Finish(t)
 
 	t = Start("- create matching tables... ")
@@ -52,59 +50,40 @@ func LetterFrequency(c string, ft *FrequencyTable) [] string {
 	for _, l := range *countTab {
 		deltasTab := ft.CalcDeltas(l.Rate)
 		sort.Sort(deltasTab)
-		fmt.Print(string(l.Key), " ", l.Key, l.Rate, " -> deltas: ")
 		//pairs[l.Key] = deltasTab.GetSmallerThan(0.0002)
 		pairs[l.Key] = deltasTab.GetBestNmatch(1)
 	}
-	PrintPretty(pairs)
 	Finish(t)
 
 	t = Start("- building association tables... ")
+	//tables := BuildTabs(&pairs)
 	tables := BuildTabs(&pairs)
 	Finish(t)
-
-	PrintPretty(tables)
 
 	t = Start("- building strings... ")
 	results := BuildStrings(tables, c, 100)
 	Finish(t)
-
-	PrintPretty(results)
 
 	fmt.Println(" TOTAL TIME:", time.Since(startAll))
 	return results
 }
 
 
-
 func BuildTabs(matches *MatchesMap) *[]ChangeTable {
 	results := &[]ChangeTable{}
-
-	//PrintPretty(matches)
-
-	// prendo un array di corrispondenze
-	for l, v := range *matches {
-		for _, k := range v {
-			// clono la sottoMappa di corrispondenze
+	l := matches.GetChar()
+	if l != 0 {
+		v := (*matches)[l]
+		if len(v) != 0 {
+			k := v[0]
 			clone := Clone(matches)
-
-			// rimuovo la lettera corrente
 			delete(*clone, l)
-
-			// rimuovo la corrispondenza scelta
 			clone.ClearTab(k)
-
-			// calcolo i sottoalberi
 			subTabs := BuildTabs(clone)
-
-			// aggiungo ad ogni sottoalbero la radice comune
 			AppendToAll(subTabs, l, k)
-
 			results = Append(results, subTabs)
 		}
 	}
-	fmt.Print("partial result: ")
-	PrintPretty(results)
 	return results
 }
 

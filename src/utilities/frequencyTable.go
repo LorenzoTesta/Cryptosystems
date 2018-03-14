@@ -57,7 +57,6 @@ func (ft *FrequencyTable) GetSmallerThan(x float64) []rune {
 func (ft *FrequencyTable) GetBestNmatch(x int) []rune {
 	result := make([]rune, 0, len(*ft))
 	sort.Sort(*ft)
-	PrintPretty(ft)
 	for i := 0; i < x; i++ {
 		result = append(result, (*ft)[i].Key)
 	}

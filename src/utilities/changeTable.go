@@ -6,15 +6,11 @@ type ChangeTable map[rune]rune
 
 func BuildStrings(tables *[]ChangeTable, ciphertext string, nchar int) []string {
 	result := []string{}
-	for _, tab := range *tables {			// scorro le tabelle
+	for _, tab := range *tables {
 		plaintext := []rune{}
-		//c := []rune(ciphertext)
 		for _, c := range ciphertext {
 			plaintext = append(plaintext, tab[c])
 		}
-		//for j:=0; j<nchar; j++ {
-		//	plaintext[j] = tab[ c[j] ]
-		//}
 		result = append(result, string(plaintext))
 	}
 	return result

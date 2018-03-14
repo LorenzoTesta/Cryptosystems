@@ -32,3 +32,10 @@ func contains(s []rune, e rune) int {
 	}
 	return -1
 }
+
+func (mm *MatchesMap)GetChar() rune {
+	for i := range *mm {
+		return i
+	}
+	return 0
+}
