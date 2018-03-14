@@ -1,21 +1,19 @@
 package utilities
 
 
+type MatchesMap map[rune][]rune
+
 
 func (mm *MatchesMap)ClearTab(l rune) {
-	for _, a := range *mm {
-		i := contains(a, l)
-		if i > 0 {
-			a = append(a[:i], a[i+1:]...)
+	for i, a := range *mm {
+		j := contains(a, l)
+		if j > -1 {
+			a = append(a[:j], a[j+1:]...)
 		}
+		(*mm)[i] = a
 	}
 }
 
-type Match struct {
-	Values rune
-}
-
-type MatchesMap map[rune][]rune
 
 func Clone(matches *MatchesMap) *MatchesMap {
 	result := MatchesMap{}
