@@ -40,27 +40,24 @@ func LetterFrequency(c string, ft *FrequencyTable) [] string {
 	Finish(t)
 
 	sort.Sort(countTab)
-
 	PrintPretty(countTab)
 
 	t = Start("- calculate rating... ")
 	countTab.CalcPerc(len(c))
-	Finish(t)
-
 	PrintPretty(countTab)
+	Finish(t)
 
 	t = Start("- create matching tables... ")
 	pairs := MatchesMap{}
-	for _, l := range countTab {
+	for _, l := range *countTab {
 		deltasTab := ft.CalcDeltas(l.Rate)
 		sort.Sort(deltasTab)
 		fmt.Print(string(l.Key), " ", l.Key, l.Rate, " -> deltas: ")
-		pairs[l.Key] = deltasTab.GetSmallerThan(0.0002)
+		//pairs[l.Key] = deltasTab.GetSmallerThan(0.0002)
 		pairs[l.Key] = deltasTab.GetBestNmatch(1)
 	}
-	Finish(t)
-
 	PrintPretty(pairs)
+	Finish(t)
 
 	t = Start("- building association tables... ")
 	tables := BuildTabs(&pairs)
@@ -80,8 +77,10 @@ func LetterFrequency(c string, ft *FrequencyTable) [] string {
 
 
 
-func BuildTabs(matches *MatchesMap) []*ChangeTable {
-	results := []*ChangeTable{}
+func BuildTabs(matches *MatchesMap) *[]ChangeTable {
+	results := &[]ChangeTable{}
+
+	//PrintPretty(matches)
 
 	// prendo un array di corrispondenze
 	for l, v := range *matches {
@@ -100,8 +99,12 @@ func BuildTabs(matches *MatchesMap) []*ChangeTable {
 
 			// aggiungo ad ogni sottoalbero la radice comune
 			AppendToAll(subTabs, l, k)
+
+			results = Append(results, subTabs)
 		}
 	}
+	fmt.Print("partial result: ")
+	PrintPretty(results)
 	return results
 }
 
