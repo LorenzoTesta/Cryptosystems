@@ -19,7 +19,7 @@ func (p FrequencyTable) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 func (p FrequencyTable) Less(i, j int) bool { return p[i].Rate < p[j].Rate }
 
 
-func NewFrequencyTable(s string) FrequencyTable {
+func NewFrequencyTable(s string) *FrequencyTable {
 	count := map[rune]float64{}
 	result := FrequencyTable{}
 
@@ -31,7 +31,7 @@ func NewFrequencyTable(s string) FrequencyTable {
 		result = append(result, &Value{i, v})
 	}
 
-	return result
+	return &result
 }
 
 func (ft *FrequencyTable) CalcPerc(l int) {
@@ -65,12 +65,12 @@ func (ft *FrequencyTable) GetBestNmatch(x int) []rune {
 }
 
 
-func (ft *FrequencyTable) CalcDeltas(count float64) FrequencyTable {
+func (ft *FrequencyTable) CalcDeltas(count float64) *FrequencyTable {
 	deltas := make(FrequencyTable, len(*ft))
 	for i, v := range *ft {
 		deltas[i] = &Value{ v.Key, Round(math.Abs(v.Rate - count), 4) }
 	}
-	return deltas
+	return &deltas
 }
 
 
