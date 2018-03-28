@@ -5,7 +5,6 @@ import (
 	. "../../../utilities"
 	"sort"
 	"time"
-	"fmt"
 )
 
 
@@ -31,21 +30,22 @@ var ENG_FREQTABLE = FrequencyTable{  {'a', 0.082}, {'b', 0.015}, {'c', 0.028}, {
 
 
 
-func LetterFrequency(c string, ft *FrequencyTable) [] string {
+func LetterFrequency(c string, ft *FrequencyTable, debug bool) [] string {
 
 	startAll := time.Now()
+	d := Debug{debug}
 
-	t := Start("- count the occurrences... ")
+	t := d.Start("- count the occurrences... ")
 	countTab := NewFrequencyTable(c)
-	Finish(t)
+	d.Finish(t)
 
 	sort.Sort(countTab)
 
-	t = Start("- calculate rating... ")
+	t = d.Start("- calculate rating... ")
 	countTab.CalcPerc(len(c))
-	Finish(t)
+	d.Finish(t)
 
-	t = Start("- create matching tables... ")
+	t = d.Start("- create matching tables... ")
 	pairs := MatchesMap{}
 	for _, l := range *countTab {
 		deltasTab := ft.CalcDeltas(l.Rate)
@@ -53,18 +53,22 @@ func LetterFrequency(c string, ft *FrequencyTable) [] string {
 		//pairs[l.Key] = deltasTab.GetSmallerThan(0.0002)
 		pairs[l.Key] = deltasTab.GetBestNmatch(1)
 	}
-	Finish(t)
+	d.Finish(t)
 
-	t = Start("- building association tables... ")
-	//tables := BuildTabs(&pairs)
+	d.PrintPretty(pairs)
+
+	t = d.Start("- building association tables... ")
 	tables := BuildTabs(&pairs)
-	Finish(t)
+	//tables := BuildTabs(&pairs)
+	d.Finish(t)
 
-	t = Start("- building strings... ")
+	d.PrintPretty(tables)
+
+	t = d.Start("- building strings... ")
 	results := BuildStrings(tables, c, 100)
-	Finish(t)
+	d.Finish(t)
 
-	fmt.Println(" TOTAL TIME:", time.Since(startAll))
+	d.Info(" TOTAL TIME: " + string(time.Since(startAll)))
 	return results
 }
 

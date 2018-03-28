@@ -7,26 +7,44 @@ import (
 )
 
 
+type Debug struct {
+	PrintInfo bool
+}
 
-func Start(s string) *time.Time {
+
+func (d *Debug) Info(s string) {
+	if d.PrintInfo {
+		fmt.Println(s)
+	}
+}
+
+
+func (d *Debug) Start(s string) *time.Time {
 	t := time.Now()
-	fmt.Println(s)
+	if d.PrintInfo {
+		fmt.Println(s)
+	}
 	return &t
 }
 
 
 
-func Finish(t *time.Time) {
-	fmt.Println(" duration:", time.Since(*t))
+func (d *Debug) Finish(t *time.Time) {
+	if d.PrintInfo {
+		fmt.Println(" duration:", time.Since(*t))
+	}
 }
 
 
 
-func PrintPretty(v interface{}){
-	a, e := json.Marshal(v)
-	if e != nil {
-		return
+func (d *Debug) PrintPretty(v interface{}) {
+	if d.PrintInfo {
+		a, e := json.Marshal(v)
+		if e != nil {
+			fmt.Println(e)
+			return
+		}
+		fmt.Println(string(a))
 	}
-	fmt.Println(string(a))
 }
 
