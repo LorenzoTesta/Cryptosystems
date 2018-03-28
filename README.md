@@ -6,6 +6,6 @@
 * Enigma
 
 ### Classical cryptosystems attacks:
-* shift (Caesar cipher):
+* shift:
   * exhaustive
   * letter frequency
